@@ -26,7 +26,7 @@ func TestPrepareWorkspace(t *testing.T) {
 
 	problem, _ := leetcode.GetProblem("two-sum")
 
-	err = PrepareWorkspace(problem)
+	err = PrepareWorkspace(problem, "go")
 	if err != nil {
 		t.Errorf("expected no error, got %v", err)
 	}
