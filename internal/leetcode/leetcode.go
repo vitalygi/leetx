@@ -18,7 +18,7 @@ type ProblemDetail struct {
 		Question struct {
 			Title         string `json:"title"`
 			TitleSlug     string `json:"titleSlug"`
-			QuestionId    string `json:"questionId"`
+			QuestionId    string `json:"questionFrontendId"`
 			Content       string `json:"content"`
 			QuestionTitle string `json:"questionTitle"`
 			Difficulty    string `json:"difficulty"`
@@ -39,9 +39,9 @@ func GetProblem(titleSlug string) (ProblemDetail, error) {
 				title
 				titleSlug
 				content
+				questionFrontendId
 				difficulty
 				questionTitle
-				questionId
 			}
 		}
 	`
