@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type Request struct {
@@ -26,10 +27,28 @@ type ProblemDetail struct {
 				Name string `json:"name"`
 				Slug string `json:"slug"`
 			} `json:"topicTags"`
+			CodeSnippets []CodeSnippet `json:"codeSnippets"`
 		} `json:"question"`
 	} `json:"data"`
 }
 
+type CodeSnippet struct {
+	Code     string `json:"code"`
+	Lang     string `json:"lang"`
+	LangSlug string `json:"langSlug"`
+}
+
+func (problem *ProblemDetail) GetCodeSnippet(langSlug string) (CodeSnippet, bool) {
+	for _, snippet := range problem.Data.Question.CodeSnippets {
+		langSlug = strings.ToLower(langSlug)
+		isNecessaryLangSlug := strings.ToLower(snippet.LangSlug) == langSlug
+		isNecessaryLang := strings.ToLower(snippet.Lang) == langSlug
+		if isNecessaryLangSlug || isNecessaryLang {
+			return snippet, true
+		}
+	}
+	return CodeSnippet{}, false
+}
 func GetProblem(titleSlug string) (ProblemDetail, error) {
 	url := "https://leetcode.com/graphql/"
 
@@ -42,6 +61,15 @@ func GetProblem(titleSlug string) (ProblemDetail, error) {
 				questionFrontendId
 				difficulty
 				questionTitle
+				codeSnippets {
+				  lang
+				  langSlug
+				  code
+				}
+				topicTags {
+				  name
+				  slug
+				}
 			}
 		}
 	`
@@ -77,7 +105,6 @@ func GetProblem(titleSlug string) (ProblemDetail, error) {
 		fmt.Println("Cannot read response:", err)
 		return ProblemDetail{}, err
 	}
-
 	var response ProblemDetail
 	err = json.Unmarshal(responseBody, &response)
 	if err != nil {
