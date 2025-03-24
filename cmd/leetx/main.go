@@ -36,7 +36,7 @@ func getProblemTitle(url string) (string, error) {
 
 func main() {
 	problemURL := flag.String("get", "", "Enter correct URL to get problem")
-	language := flag.String("l", "", "Enter programming language for start code")
+	language := flag.String("l", "", "Enter programming language for code snippet")
 	flag.Parse()
 	if *problemURL == "" {
 		fmt.Println(ErrEmptyURL)

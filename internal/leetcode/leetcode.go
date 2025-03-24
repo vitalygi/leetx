@@ -9,6 +9,31 @@ import (
 	"strings"
 )
 
+const (
+	leetCodeGraphQLURL  = "https://leetcode.com/graphql/"
+	questionDetailQuery = `
+        query questionDetail($titleSlug: String!) {
+            question(titleSlug: $titleSlug) {
+                title
+                titleSlug
+                content
+                questionFrontendId
+                difficulty
+                questionTitle
+                codeSnippets {
+                    lang
+                    langSlug
+                    code
+                }
+                topicTags {
+                    name
+                    slug
+                }
+            }
+        }
+    `
+)
+
 type Request struct {
 	Query     string      `json:"query"`
 	Variables interface{} `json:"variables"`
@@ -39,8 +64,8 @@ type CodeSnippet struct {
 }
 
 func (problem *ProblemDetail) GetCodeSnippet(langSlug string) (CodeSnippet, bool) {
+	langSlug = strings.ToLower(langSlug)
 	for _, snippet := range problem.Data.Question.CodeSnippets {
-		langSlug = strings.ToLower(langSlug)
 		isNecessaryLangSlug := strings.ToLower(snippet.LangSlug) == langSlug
 		isNecessaryLang := strings.ToLower(snippet.Lang) == langSlug
 		if isNecessaryLangSlug || isNecessaryLang {
@@ -50,29 +75,8 @@ func (problem *ProblemDetail) GetCodeSnippet(langSlug string) (CodeSnippet, bool
 	return CodeSnippet{}, false
 }
 func GetProblem(titleSlug string) (ProblemDetail, error) {
-	url := "https://leetcode.com/graphql/"
-
-	query := `
-		query questionDetail($titleSlug: String!) {
-			question(titleSlug: $titleSlug) {
-				title
-				titleSlug
-				content
-				questionFrontendId
-				difficulty
-				questionTitle
-				codeSnippets {
-				  lang
-				  langSlug
-				  code
-				}
-				topicTags {
-				  name
-				  slug
-				}
-			}
-		}
-	`
+	url := leetCodeGraphQLURL
+	query := questionDetailQuery
 
 	variables := map[string]interface{}{
 		"titleSlug": titleSlug,

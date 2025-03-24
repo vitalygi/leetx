@@ -45,5 +45,6 @@ func PrepareWorkspace(problem leetcode.ProblemDetail, language string) error {
 			fmt.Fprintln(problemFile, problem.Data.Question.Content)
 		}
 	}
+	fmt.Printf("Problem: %s\nDifficulty: %s\n", problem.Data.Question.Title, problem.Data.Question.Difficulty)
 	return nil
 }
