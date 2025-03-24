@@ -36,8 +36,13 @@ func TestPrepareWorkspace(t *testing.T) {
 		t.Errorf("directory %s does not exist", dirName)
 	}
 
-	fileName := filepath.Join(dirName, "main_test.go")
-	if _, err := os.Stat(fileName); os.IsNotExist(err) {
-		t.Errorf("file %s does not exist", fileName)
+	codeFileName := filepath.Join(dirName, "main_test.go")
+	if _, err := os.Stat(codeFileName); os.IsNotExist(err) {
+		t.Errorf("file %s does not exist", codeFileName)
+	}
+
+	problemFileName := filepath.Join(dirName, "problem.md")
+	if _, err := os.Stat(problemFileName); os.IsNotExist(err) {
+		t.Errorf("file %s does not exist", problemFileName)
 	}
 }
