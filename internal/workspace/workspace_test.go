@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"LeetX/internal/leetcode"
+	"context"
 	"os"
 	"path/filepath"
 	"testing"
@@ -23,8 +24,8 @@ func TestPrepareWorkspace(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	problem, _ := leetcode.GetProblemByURL("https://leetcode.com/problems/two-sum/")
+	client := leetcode.NewClient()
+	problem, _ := client.GetProblemByURL(context.Background(), "https://leetcode.com/problems/two-sum/")
 
 	err = PrepareWorkspace(problem, "go", "")
 	if err != nil {

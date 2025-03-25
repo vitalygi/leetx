@@ -3,37 +3,29 @@ package main
 import (
 	"LeetX/internal/leetcode"
 	"LeetX/internal/workspace"
-	"errors"
+	"context"
 	"flag"
 	"fmt"
 )
 
-var (
-	ErrProblemNotFound = errors.New("problem not found")
-	ErrEmptyURL        = errors.New("enter url of problem you need")
-)
-
 func main() {
-	problemID := flag.String("get", "", "Enter correct URL to get problem")
-	language := flag.String("l", "", "Enter programming language for code snippet")
-	mainFileName := flag.String("f", "", "Enter file name for file with code snippet. "+
-		"Default will be get from language")
+	problemID := flag.String("get", "", "URL of the LeetCode problem to fetch (required)")
+	language := flag.String("l", "", "Programming language for the code snippet (e.g., go, python)")
+	mainFileName := flag.String("f", "", "File name for the code snippet (default based on language)")
 	flag.Parse()
 	if *problemID == "" {
-		fmt.Println(ErrEmptyURL)
+		flag.Usage()
 		return
 	}
-	var problem leetcode.Problem
-	var err error
 
-	problem, err = leetcode.GetProblemByURL(*problemID)
+	client := leetcode.NewClient()
+	problem, err := client.GetProblemByURL(context.Background(), *problemID)
+
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
-	if problem.QuestionId == "" {
-		fmt.Println(ErrProblemNotFound)
-		return
-	}
+
 	err = workspace.PrepareWorkspace(problem, *language, *mainFileName)
 	if err != nil {
 		fmt.Println(err)

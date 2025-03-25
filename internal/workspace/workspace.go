@@ -70,8 +70,7 @@ func PrepareWorkspace(problem leetcode.Problem, language string, mainFileName st
 	dirName := fmt.Sprintf("%v.%v", problem.QuestionId, normalizedProblemTitle)
 	err := os.Mkdir(filepath.Join(".", dirName), os.ModePerm)
 	if err != nil && os.IsNotExist(err) {
-		fmt.Println(ErrWhileCreateDir, err)
-		return err
+		return ErrWhileCreateDir
 	}
 	codeFile := createMainFile(dirName, language, mainFileName)
 	if codeFile != nil && language != "" {
