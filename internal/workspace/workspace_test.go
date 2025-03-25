@@ -24,9 +24,9 @@ func TestPrepareWorkspace(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	problem, _ := leetcode.GetProblem("two-sum")
+	problem, _ := leetcode.GetProblemByURL("https://leetcode.com/problems/two-sum/")
 
-	err = PrepareWorkspace(problem, "go")
+	err = PrepareWorkspace(problem, "go", "")
 	if err != nil {
 		t.Errorf("expected no error, got %v", err)
 	}
@@ -36,7 +36,7 @@ func TestPrepareWorkspace(t *testing.T) {
 		t.Errorf("directory %s does not exist", dirName)
 	}
 
-	codeFileName := filepath.Join(dirName, "main_test.go")
+	codeFileName := filepath.Join(dirName, "main.go")
 	if _, err := os.Stat(codeFileName); os.IsNotExist(err) {
 		t.Errorf("file %s does not exist", codeFileName)
 	}

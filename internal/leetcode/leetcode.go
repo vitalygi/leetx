@@ -3,10 +3,16 @@ package leetcode
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
+)
+
+var (
+	ErrNotCorrectPrefix = errors.New("URL should starts with https://leetcode.com/problems/")
+	ErrIncorrectURL     = errors.New("incorrect leetcode url")
 )
 
 const (
@@ -39,22 +45,23 @@ type Request struct {
 	Variables interface{} `json:"variables"`
 }
 
-type ProblemDetail struct {
+type RawProblemResponse struct {
 	Data struct {
-		Question struct {
-			Title         string `json:"title"`
-			TitleSlug     string `json:"titleSlug"`
-			QuestionId    string `json:"questionFrontendId"`
-			Content       string `json:"content"`
-			QuestionTitle string `json:"questionTitle"`
-			Difficulty    string `json:"difficulty"`
-			TopicTags     []struct {
-				Name string `json:"name"`
-				Slug string `json:"slug"`
-			} `json:"topicTags"`
-			CodeSnippets []CodeSnippet `json:"codeSnippets"`
-		} `json:"question"`
+		Problem Problem `json:"question"`
 	} `json:"data"`
+}
+type Problem struct {
+	Title         string `json:"title"`
+	TitleSlug     string `json:"titleSlug"`
+	QuestionId    string `json:"questionFrontendId"`
+	Content       string `json:"content"`
+	QuestionTitle string `json:"questionTitle"`
+	Difficulty    string `json:"difficulty"`
+	TopicTags     []struct {
+		Name string `json:"name"`
+		Slug string `json:"slug"`
+	} `json:"topicTags"`
+	CodeSnippets []CodeSnippet `json:"codeSnippets"`
 }
 
 type CodeSnippet struct {
@@ -63,9 +70,9 @@ type CodeSnippet struct {
 	LangSlug string `json:"langSlug"`
 }
 
-func (problem *ProblemDetail) GetCodeSnippet(langSlug string) (CodeSnippet, bool) {
+func (problem *Problem) GetCodeSnippet(langSlug string) (CodeSnippet, bool) {
 	langSlug = strings.ToLower(langSlug)
-	for _, snippet := range problem.Data.Question.CodeSnippets {
+	for _, snippet := range problem.CodeSnippets {
 		isNecessaryLangSlug := strings.ToLower(snippet.LangSlug) == langSlug
 		isNecessaryLang := strings.ToLower(snippet.Lang) == langSlug
 		if isNecessaryLangSlug || isNecessaryLang {
@@ -74,17 +81,47 @@ func (problem *ProblemDetail) GetCodeSnippet(langSlug string) (CodeSnippet, bool
 	}
 	return CodeSnippet{}, false
 }
-func GetProblem(titleSlug string) (ProblemDetail, error) {
+
+func checkURLPrefix(url string) error {
+	if strings.HasPrefix(url, "https://leetcode.com/problems/") {
+		return nil
+	} else {
+		return ErrNotCorrectPrefix
+	}
+}
+
+func getProblemTitle(url string) (string, error) {
+	urlParts := strings.Split(url, "/")
+	if len(urlParts) > 4 {
+		return urlParts[4], nil
+	} else {
+		return "", ErrIncorrectURL
+	}
+
+}
+func GetProblemByURL(url string) (Problem, error) {
+	err := checkURLPrefix(url)
+	if err != nil {
+		fmt.Println(err)
+		return Problem{}, err
+	}
+
+	problemTitle, err := getProblemTitle(url)
+	if err != nil {
+		fmt.Println(ErrIncorrectURL)
+		return Problem{}, err
+	}
+	return getProblem(map[string]interface{}{
+		"titleSlug": problemTitle}, questionDetailQuery)
+}
+
+func getProblem(queryVars map[string]interface{}, questionDetailQuery string) (Problem, error) {
 	url := leetCodeGraphQLURL
 	query := questionDetailQuery
 
-	variables := map[string]interface{}{
-		"titleSlug": titleSlug,
-	}
-
 	requestBody := Request{
 		Query:     query,
-		Variables: variables,
+		Variables: queryVars,
 	}
 
 	requestBodyBytes, _ := json.Marshal(requestBody)
@@ -92,7 +129,7 @@ func GetProblem(titleSlug string) (ProblemDetail, error) {
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBodyBytes))
 	if err != nil {
 		fmt.Println("Cannot create request", err)
-		return ProblemDetail{}, err
+		return Problem{}, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
@@ -100,22 +137,22 @@ func GetProblem(titleSlug string) (ProblemDetail, error) {
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Cannot get problem:", err)
-		return ProblemDetail{}, err
+		return Problem{}, err
 	}
 	defer resp.Body.Close()
 
 	responseBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Cannot read response:", err)
-		return ProblemDetail{}, err
+		return Problem{}, err
 	}
-	var response ProblemDetail
+	var response RawProblemResponse
 	err = json.Unmarshal(responseBody, &response)
 	if err != nil {
 		fmt.Println("Cannot parse response:", err)
-		return ProblemDetail{}, err
+		return Problem{}, err
 	}
 
-	return response, nil
+	return response.Data.Problem, nil
 
 }

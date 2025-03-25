@@ -6,64 +6,37 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"strings"
 )
 
 var (
-	ErrNotCorrectPrefix = errors.New("URL should starts with https://leetcode.com/problems/")
-	ErrIncorrectURL     = errors.New("incorrect leetcode url")
-	ErrProblemNotFound  = errors.New("problem not found")
-	ErrEmptyURL         = errors.New("enter url of problem you need")
+	ErrProblemNotFound = errors.New("problem not found")
+	ErrEmptyURL        = errors.New("enter url of problem you need")
 )
 
-func checkURLPrefix(url string) error {
-	if strings.HasPrefix(url, "https://leetcode.com/problems/") {
-		return nil
-	} else {
-		return ErrNotCorrectPrefix
-	}
-}
-
-func getProblemTitle(url string) (string, error) {
-	urlParts := strings.Split(url, "/")
-	if len(urlParts) > 4 {
-		return urlParts[4], nil
-	} else {
-		return "", ErrIncorrectURL
-	}
-
-}
-
 func main() {
-	problemURL := flag.String("get", "", "Enter correct URL to get problem")
+	problemID := flag.String("get", "", "Enter correct URL to get problem")
 	language := flag.String("l", "", "Enter programming language for code snippet")
+	mainFileName := flag.String("f", "", "Enter file name for file with code snippet. "+
+		"Default will be get from language")
 	flag.Parse()
-	if *problemURL == "" {
+	if *problemID == "" {
 		fmt.Println(ErrEmptyURL)
 		return
 	}
-	err := checkURLPrefix(*problemURL)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	problemTitle, err := getProblemTitle(*problemURL)
-	if err != nil {
-		fmt.Println(ErrIncorrectURL)
-		return
-	}
-	problem, err := leetcode.GetProblem(problemTitle)
+	var problem leetcode.Problem
+	var err error
+
+	problem, err = leetcode.GetProblemByURL(*problemID)
 	if err != nil {
 		return
 	}
-	if problem.Data.Question.QuestionId == "" {
+	if problem.QuestionId == "" {
 		fmt.Println(ErrProblemNotFound)
 		return
 	}
-	err = workspace.PrepareWorkspace(problem, *language)
+	err = workspace.PrepareWorkspace(problem, *language, *mainFileName)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-
 }
