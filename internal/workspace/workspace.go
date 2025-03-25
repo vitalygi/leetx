@@ -85,7 +85,9 @@ func PrepareWorkspace(problem leetcode.Problem, language string, mainFileName st
 		if problemFile != nil {
 			fmt.Fprintln(problemFile, problem.Content)
 		}
+	} else {
+		fmt.Println("Problem description is empty")
 	}
-	fmt.Printf("Problem: %s\nDifficulty: %s\n", problem.Title, problem.Difficulty)
+	fmt.Printf("Problem: %s.%s\nDifficulty: %s\n", problem.QuestionId, problem.Title, problem.Difficulty)
 	return nil
 }
