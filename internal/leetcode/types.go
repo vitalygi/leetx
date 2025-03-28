@@ -7,6 +7,13 @@ type Request struct {
 	Variables interface{} `json:"variables"`
 }
 
+type RawProblemSetQuestionListResponse struct {
+	Data struct {
+		Problemset struct {
+			Problems []Problem `json:"questions"`
+		} `json:"problemsetQuestionList"`
+	} `json:"data"`
+}
 type RawProblemResponse struct {
 	Data struct {
 		Problem Problem `json:"question"`

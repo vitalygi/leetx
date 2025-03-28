@@ -23,4 +23,38 @@ const (
             }
         }
     `
+	problemsetQuestionListQuery = `
+		query problemsetQuestionList(
+		  $categorySlug: String, 
+		  $limit: Int, 
+		  $skip: Int, 
+		  $filters: QuestionListFilterInput
+		) {
+		  problemsetQuestionList: questionList(
+			categorySlug: $categorySlug
+			limit: $limit
+			skip: $skip
+			filters: $filters
+		  ) {
+			total: totalNum
+			questions: data {
+                title
+                titleSlug
+                content
+                questionFrontendId
+                difficulty
+                questionTitle
+                codeSnippets {
+                    lang
+                    langSlug
+                    code
+                }
+                topicTags {
+                    name
+                    slug
+                }
+			}
+		  }
+		}
+	`
 )

@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	problemID := flag.String("get", "", "URL of the LeetCode problem to fetch (required)")
+	problemID := flag.String("get", "", "URL or ID or title of the LeetCode problem to fetch (required)")
 	language := flag.String("l", "", "Programming language for the code snippet (e.g., go, python)")
 	mainFileName := flag.String("f", "", "File name for the code snippet (default based on language)")
 	flag.Parse()
@@ -19,7 +19,7 @@ func main() {
 	}
 
 	client := leetcode.NewClient()
-	problem, err := client.GetProblemByURL(context.Background(), *problemID)
+	problem, err := client.GetProblem(context.Background(), *problemID)
 
 	if err != nil {
 		fmt.Println(err)

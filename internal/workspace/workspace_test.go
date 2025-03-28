@@ -25,7 +25,7 @@ func TestPrepareWorkspace(t *testing.T) {
 		t.Fatal(err)
 	}
 	client := leetcode.NewClient()
-	problem, _ := client.GetProblemByURL(context.Background(), "https://leetcode.com/problems/two-sum/")
+	problem, _ := client.GetProblem(context.Background(), "https://leetcode.com/problems/two-sum/")
 
 	err = PrepareWorkspace(problem, "go", "")
 	if err != nil {
