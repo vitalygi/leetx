@@ -29,28 +29,27 @@ To install LeetX, follow these steps:
 To fetch a LeetCode problem and set it up locally, use the following command:
 
 ```bash
-leetx -get <leetcode-problem-url>
+leetx -get <url/id/title>
 ```
 
 ### Example
 ```bash
-leetx -get https://leetcode.com/problems/two-sum/
+leetx -get 1 -l go 
 ```
-
 This will create a directory named after the problem (e.g., `1.Two_Sum`) containing:
 - `problem.md`: A file with the problem description.
-- A code file: A template in the specified language (if provided).
+- `main.go`: A template in the specified language (in example in golang).
 
 ### Optional Flags
 - **Specify a programming language** with the `-l` flag:
   ```bash
-  leetx -get https://leetcode.com/problems/two-sum/ -l go
+  leetx -get two-sum -l go
   ```
   This generates a `main.go` file with a Go code template.
 
 - **Customize the code filename** with the `-f` flag:
   ```bash
-  leetx -get https://leetcode.com/problems/two-sum/ -l go -f solution.go
+  leetx -get 1 -l go -f solution.go
   ```
   This creates a `solution.go` file instead of the default `main.go`.
 
