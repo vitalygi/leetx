@@ -19,8 +19,8 @@ func main() {
 	}
 
 	client := leetcode.NewClient()
-	problem, err := client.GetProblem(context.Background(), *problemID)
 
+	problem, err := client.GetProblem(context.Background(), *problemID)
 	if err != nil {
 		fmt.Println(err)
 		return

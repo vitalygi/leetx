@@ -71,7 +71,12 @@ func (c *client) getProblemByQuery(ctx context.Context, query string) (Problem, 
 	if len(problems) > 0 {
 		return problems[0], err
 	} else {
-		return Problem{}, ErrProblemNotFound
+		if err != nil {
+			return Problem{}, err
+		} else {
+			return Problem{}, ErrProblemNotFound
+		}
+
 	}
 }
 

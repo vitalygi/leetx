@@ -9,32 +9,6 @@ import (
 	"strings"
 )
 
-var langCommonFile = map[string]string{
-	"c++":        "main.cpp",
-	"cpp":        "main.cpp",
-	"java":       "Main.java",
-	"python":     "main.py",
-	"python3":    "main.py",
-	"c":          "main.c",
-	"c#":         "Program.cs",
-	"javascript": "index.js",
-	"typescript": "index.ts",
-	"js":         "index.js",
-	"ts":         "index.ts",
-	"php":        "index.php",
-	"swift":      "main.swift",
-	"kotlin":     "Main.kt",
-	"dart":       "main.dart",
-	"go":         "main.go",
-	"golang":     "main.go",
-	"ruby":       "main.rb",
-	"scala":      "Main.scala",
-	"rust":       "main.rs",
-	"racket":     "main.rkt",
-	"erlang":     "main.erl",
-	"elixir":     "main.ex",
-}
-
 var (
 	ErrWhileCreateDir  = errors.New("cannot create dir for problem")
 	ErrWhileCreateFile = errors.New("cannot create file for problem")
@@ -83,11 +57,11 @@ func PrepareWorkspace(problem leetcode.Problem, language string, mainFileName st
 	if problem.Content != "" {
 		problemFile := createFile(filepath.Join(".", dirName, "problem.md"))
 		if problemFile != nil {
-			fmt.Fprintln(problemFile, problem.Content)
+			fmt.Fprintf(problemFile, "%s\n%s", problem.GetURL(), problem.Content)
 		}
 	} else {
 		fmt.Println("Problem description is empty")
 	}
-	fmt.Printf("Problem: %s.%s\nDifficulty: %s\n", problem.QuestionId, problem.Title, problem.Difficulty)
+	fmt.Print(problem.GetInfo())
 	return nil
 }

@@ -1,6 +1,9 @@
 package leetcode
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Request struct {
 	Query     string      `json:"query"`
@@ -43,6 +46,18 @@ func (problem *Problem) GetCodeSnippet(langSlug string) (CodeSnippet, bool) {
 		}
 	}
 	return CodeSnippet{}, false
+}
+func (problem *Problem) GetURL() string {
+	return fmt.Sprintf("https://leetcode.com/problems/%s", problem.TitleSlug)
+}
+
+func (problem *Problem) GetInfo() string {
+	return fmt.Sprintf(
+		"Problem: %s.%s\nDifficulty: %s\nURL:%s\n",
+		problem.QuestionId,
+		problem.Title,
+		problem.Difficulty,
+		problem.GetURL())
 }
 
 type CodeSnippet struct {
