@@ -46,7 +46,7 @@ jobs:
           GOOS=${{ matrix.goos }} GOARCH=amd64 go build -o dist/leetx-${{ matrix.goos }}-${{ github.ref_name }} ./cmd/leetx
 
       - name: Upload binary
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: binaries
           path: dist/leetx-${{ matrix.goos }}*
