@@ -69,4 +69,5 @@ jobs:
         with:
           repo_token: ${{ secrets.TOKEN }}
           tag: ${{ github.ref_name }}
-          file: dist/*
+          file: dist/leetx-*
+          file_glob: true
