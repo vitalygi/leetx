@@ -22,6 +22,13 @@ type RawProblemResponse struct {
 		Problem Problem `json:"question"`
 	} `json:"data"`
 }
+
+type CodeSnippet struct {
+	Code     string `json:"code"`
+	Lang     string `json:"lang"`
+	LangSlug string `json:"langSlug"`
+}
+
 type Problem struct {
 	Title         string `json:"title"`
 	TitleSlug     string `json:"titleSlug"`
@@ -47,6 +54,7 @@ func (problem *Problem) GetCodeSnippet(langSlug string) (CodeSnippet, bool) {
 	}
 	return CodeSnippet{}, false
 }
+
 func (problem *Problem) GetURL() string {
 	return fmt.Sprintf("https://leetcode.com/problems/%s", problem.TitleSlug)
 }
@@ -58,10 +66,4 @@ func (problem *Problem) GetInfo() string {
 		problem.Title,
 		problem.Difficulty,
 		problem.GetURL())
-}
-
-type CodeSnippet struct {
-	Code     string `json:"code"`
-	Lang     string `json:"lang"`
-	LangSlug string `json:"langSlug"`
 }

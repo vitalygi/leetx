@@ -13,7 +13,7 @@ func main() {
 	language := flag.String("l", "", "Programming language for the code snippet (e.g., go, python)")
 	mainFileName := flag.String("f", "", "File name for the code snippet (default based on language)")
 	flag.Parse()
-	if *problemID == "" {
+	if *problemID == "" || *mainFileName != "" && *language == "" {
 		flag.Usage()
 		return
 	}

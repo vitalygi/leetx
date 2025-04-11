@@ -2,7 +2,6 @@ package workspace
 
 import (
 	"LeetX/internal/leetcode"
-	"context"
 	"os"
 	"path/filepath"
 	"testing"
@@ -20,12 +19,34 @@ func TestPrepareWorkspace(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer os.Chdir(originalDir)
+
 	err = os.Chdir(tempDir)
 	if err != nil {
 		t.Fatal(err)
 	}
-	client := leetcode.NewClient()
-	problem, _ := client.GetProblem(context.Background(), "https://leetcode.com/problems/two-sum/")
+
+	problem := leetcode.Problem{
+		Title:         "Two Sum",
+		TitleSlug:     "two-sum",
+		QuestionId:    "1",
+		Content:       "<p>Given an array of integers nums and an integer target...</p>",
+		QuestionTitle: "Two Sum",
+		Difficulty:    "Easy",
+		TopicTags: []struct {
+			Name string `json:"name"`
+			Slug string `json:"slug"`
+		}{
+			{Name: "Array", Slug: "array"},
+			{Name: "Hash Table", Slug: "hash-table"},
+		},
+		CodeSnippets: []leetcode.CodeSnippet{
+			{
+				Lang:     "go",
+				LangSlug: "golang",
+				Code:     `func twoSum(nums []int, target int) []int {}`,
+			},
+		},
+	}
 
 	err = PrepareWorkspace(problem, "go", "")
 	if err != nil {
