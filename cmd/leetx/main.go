@@ -1,11 +1,11 @@
 package main
 
 import (
-	"LeetX/internal/leetcode"
-	"LeetX/internal/workspace"
 	"context"
 	"flag"
 	"fmt"
+	"github.com/vitalygi/leetx/internal/leetcode"
+	"github.com/vitalygi/leetx/internal/workspace"
 )
 
 func main() {

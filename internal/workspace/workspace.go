@@ -1,9 +1,9 @@
 package workspace
 
 import (
-	"LeetX/internal/leetcode"
 	"errors"
 	"fmt"
+	"github.com/vitalygi/leetx/internal/leetcode"
 	"os"
 	"path/filepath"
 	"strings"
