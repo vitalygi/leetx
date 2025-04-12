@@ -1,7 +1,7 @@
 package workspace
 
 import (
-	"LeetX/internal/leetcode"
+	"github.com/vitalygi/leetx/internal/leetcode"
 	"os"
 	"path/filepath"
 	"testing"
