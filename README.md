@@ -4,26 +4,17 @@ LeetX is a command-line utility designed to streamline the process of fetching L
 
 ## Installation
 
-To install LeetX, follow these steps:
-
 1. **Ensure Go is installed**: Download and install Go from [golang.org](https://golang.org/dl/) if you don’t already have it.
 
-2. **Clone the repository**:
+2. **Install LeetX using `go install`**:
    ```bash
-   git clone https://github.com/vitalygi/leetx.git
-   ```
-
-3. **Navigate to the project directory**:
-   ```bash
-   cd leetx
-   ```
-
-4. **Build and install the tool**:
-   ```bash
-   make install
-   ```
-   This will compile the Go code and install the `leetx` binary to your Go bin directory (e.g., `$GOPATH/bin` or `$HOME/go/bin`).
-
+   go install github.com/vitalygi/leetx/cmd/leetx@latest
+3. **(Optional) Add Go bin directory to your** `PATH`: If you cannot run `leetx` from the command line after installation, you may need to add your Go bin directory to your system’s `PATH`. Run the following command to add it to your shell configuration file, e.g., `~/.bashrc`, `~/.zshrc`):
+    ```
+    echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.bashrc
+    source ~/.bashrc
+    ```   
+    If you’re using a different shell (e.g., Zsh), replace ~/.bashrc with the appropriate file (e.g., ~/.zshrc).
 ## Usage
 
 To fetch a LeetCode problem and set it up locally, use the following command:
@@ -53,7 +44,7 @@ This will create a directory named after the problem (e.g., `1.Two_Sum`) contain
   ```
   This creates a `solution.go` file instead of the default `main.go`.
 
-If no language is specified, only the `problem.md` file will be created.
+If no language is specified, short problem info will be printed
 
 ## Supported Languages
 
